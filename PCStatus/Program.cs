@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics; //permite consultar contadores de desempenho do Windows, como CPU, memória e disco.
+using System.Security.Principal;
 using PCStatus.Services;
 
 internal static class Program
@@ -13,11 +14,13 @@ internal static class Program
 
         };
 
-        //"Processor" - categoria a monitorar.
-        //"% Processor Time" - indicador de utilização do processador.
-        //"_Total" - considera todos os processadores lógicos juntos.
         PerformanceCounter cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-        PerformanceCounter disco = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
+        PerformanceCounter discoPorcent = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
+        
+        DriveInfo disco = new DriveInfo("C");
+        long total = disco.TotalSize;
+        long livre = disco.TotalFreeSpace;
+
 
         MemoryService ram = new MemoryService();
 
@@ -25,7 +28,9 @@ internal static class Program
         {   
             //NextValue() retorna uma leitura do contador  
             float usoCPU = cpu.NextValue(); 
-            float usoDisco = disco.NextValue();
+            float usoDisco = discoPorcent.NextValue();
+            double livreDisco = (double)(total - livre) /total * 100; 
+
 
             
             uint usoRam = ram.ObterUsoRam();
@@ -34,6 +39,10 @@ internal static class Program
             Console.WriteLine($"CPU: {usoCPU:f0}%");
             Console.WriteLine($"RAM: {usoRam}%");
             Console.WriteLine($"DISCO: {usoDisco:f0}%");
+
+            Console.WriteLine($"\nCapacidade do disco");
+            Console.WriteLine($"TOTAL EM USO: {livreDisco:f0}");
+            Console.WriteLine($"TOTAL DISPONIVEL: {100 - (livreDisco):f0}");
 
             Thread.Sleep(1000);
         }
