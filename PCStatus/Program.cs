@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics; //permite consultar contadores de desempenho do Windows, como CPU, memória e disco.
-using System.Security.Principal;
 using PCStatus.Services;
 
 internal static class Program
@@ -22,16 +21,20 @@ internal static class Program
         long livre = disco.TotalFreeSpace;
 
 
+
         MemoryService ram = new MemoryService();
 
         while (continuar)
         {   
+            Console.Clear();
+            Console.SetCursorPosition(0, 0); //move o cursor para a primeira coluna e primeira linha
+
             //NextValue() retorna uma leitura do contador  
             float usoCPU = cpu.NextValue(); 
             float usoDisco = discoPorcent.NextValue();
             double livreDisco = (double)(total - livre) /total * 100; 
 
-
+            TimeSpan uptime = TimeSpan.FromMilliseconds(Environment.TickCount64);
             
             uint usoRam = ram.ObterUsoRam();
             
@@ -43,6 +46,9 @@ internal static class Program
             Console.WriteLine($"\nCapacidade do disco");
             Console.WriteLine($"TOTAL EM USO: {livreDisco:f0}");
             Console.WriteLine($"TOTAL DISPONIVEL: {100 - (livreDisco):f0}");
+
+            Console.WriteLine("\nWINDOWS INFO");
+            Console.WriteLine($"UPTIME: {uptime.Days}d {uptime.Hours}h {uptime.Minutes}m {uptime.Seconds}s");
 
             Thread.Sleep(1000);
         }
