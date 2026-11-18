@@ -20,9 +20,10 @@ internal static class Program
         long total = disco.TotalSize;
         long livre = disco.TotalFreeSpace;
 
-
-
         MemoryService ram = new MemoryService();
+
+        Process explorer = Process.GetProcessesByName("explorer").First();
+        DateTime inicioSessao = explorer.StartTime;  
 
         while (continuar)
         {   
@@ -49,6 +50,8 @@ internal static class Program
 
             Console.WriteLine("\nWINDOWS INFO");
             Console.WriteLine($"UPTIME: {uptime.Days}d {uptime.Hours}h {uptime.Minutes}m {uptime.Seconds}s");
+            Console.WriteLine($"INICIO DESTA SESSÃO: {inicioSessao}");
+            Console.WriteLine($"TEMPO DECORRIDO DESTA SESSÃO: {DateTime.Now - inicioSessao:hh\\:mm\\:ss}");
 
             Thread.Sleep(1000);
         }
