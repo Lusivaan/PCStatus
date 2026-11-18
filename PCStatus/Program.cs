@@ -3,8 +3,6 @@ using PCStatus.Services;
 
 internal static class Program
 {
-    
-
     static void Main()
     {
         bool continuar = true;
@@ -19,6 +17,7 @@ internal static class Program
         //"% Processor Time" - indicador de utilização do processador.
         //"_Total" - considera todos os processadores lógicos juntos.
         PerformanceCounter cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+        PerformanceCounter disco = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
 
         MemoryService ram = new MemoryService();
 
@@ -26,16 +25,17 @@ internal static class Program
         {   
             //NextValue() retorna uma leitura do contador  
             float usoCPU = cpu.NextValue(); 
+            float usoDisco = disco.NextValue();
 
             
             uint usoRam = ram.ObterUsoRam();
             
-            Console.WriteLine("PORCENTAGEM DE USO");
+            Console.WriteLine("PORCENTAGEM EM USO");
             Console.WriteLine($"CPU: {usoCPU:f0}%");
             Console.WriteLine($"RAM: {usoRam}%");
+            Console.WriteLine($"DISCO: {usoDisco:f0}%");
 
             Thread.Sleep(1000);
         }
-
     }
 }
