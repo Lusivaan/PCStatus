@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PCStatus.Tests/PCStatus.Tests.csproj" />
+  <Project Path="PCStatus/PCStatus.csproj" />
+</Solution>
